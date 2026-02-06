@@ -1,0 +1,1002 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Crónicas de Waterdeep — Test de Aptitud</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --card:#121a33;
+      --muted:#9fb0d0;
+      --text:#e8eefc;
+      --accent:#7aa2ff;
+      --accent2:#6ef3c5;
+      --danger:#ff6b6b;
+      --border:rgba(255,255,255,.10);
+      --shadow: 0 12px 30px rgba(0,0,0,.35);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: radial-gradient(1200px 600px at 15% 10%, rgba(122,162,255,.18), transparent 60%),
+                  radial-gradient(900px 450px at 75% 0%, rgba(110,243,197,.14), transparent 60%),
+                  var(--bg);
+      color:var(--text);
+      line-height:1.35;
+    }
+    header{
+      padding:28px 16px 10px;
+      max-width:980px;
+      margin:0 auto;
+    }
+    h1{
+      margin:0 0 8px;
+      font-size: clamp(20px, 2.8vw, 30px);
+      letter-spacing:.2px;
+    }
+    .subtitle{
+      color:var(--muted);
+      margin:0;
+      font-size:14px;
+    }
+    .wrap{
+      max-width:980px;
+      margin:0 auto;
+      padding:16px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:14px;
+    }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .card-inner{ padding:16px; }
+    .row{
+      display:flex; gap:12px; flex-wrap:wrap;
+      align-items:center;
+    }
+    label{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      margin-bottom:6px;
+    }
+    input[type="text"]{
+      width:min(380px, 100%);
+      padding:10px 12px;
+      border-radius: 12px;
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.25);
+      color:var(--text);
+      outline:none;
+    }
+    input[type="text"]:focus{ border-color: rgba(122,162,255,.55); }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius: 999px;
+      border:1px solid var(--border);
+      color:var(--muted);
+      font-size:12px;
+      background: rgba(0,0,0,.18);
+    }
+    .btn{
+      appearance:none;
+      border:1px solid var(--border);
+      background: rgba(122,162,255,.14);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius: 14px;
+      cursor:pointer;
+      font-weight:600;
+    }
+    .btn:hover{ border-color: rgba(122,162,255,.55); }
+    .btn.secondary{
+      background: rgba(255,255,255,.06);
+    }
+    .btn.danger{
+      background: rgba(255,107,107,.12);
+    }
+    .btn:disabled{
+      opacity:.45;
+      cursor:not-allowed;
+    }
+    .progress{
+      height:10px;
+      background: rgba(255,255,255,.08);
+      border-radius:999px;
+      overflow:hidden;
+      border:1px solid var(--border);
+      flex:1;
+      min-width:200px;
+    }
+    .progress > div{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius:999px;
+      transition: width .25s ease;
+    }
+    .q-head{
+      padding:14px 16px;
+      border-bottom:1px solid var(--border);
+      background: rgba(0,0,0,.12);
+      display:flex;
+      gap:10px;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .q-title{
+      font-weight:700;
+      letter-spacing:.2px;
+    }
+    .q-meta{
+      color:var(--muted);
+      font-size:12px;
+    }
+    .q-body{
+      padding:16px;
+    }
+    .context{
+      color:var(--muted);
+      font-size:12px;
+      margin-bottom:10px;
+    }
+    .prompt{
+      margin:0 0 14px;
+      font-size:14px;
+    }
+    .options{
+      display:grid;
+      gap:10px;
+    }
+    .opt{
+      border:1px solid var(--border);
+      border-radius: 14px;
+      padding:12px;
+      background: rgba(0,0,0,.20);
+      cursor:pointer;
+      transition: transform .05s ease, border-color .15s ease;
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+    }
+    .opt:hover{ border-color: rgba(255,255,255,.22); }
+    .opt:active{ transform: scale(.995); }
+    .opt .letter{
+      width:28px; height:28px;
+      border-radius:10px;
+      display:flex; align-items:center; justify-content:center;
+      background: rgba(122,162,255,.16);
+      border:1px solid rgba(122,162,255,.35);
+      font-weight:800;
+      flex:0 0 auto;
+    }
+    .opt.selected{
+      border-color: rgba(122,162,255,.55);
+      background: rgba(122,162,255,.14);
+    }
+    .opt .text{
+      font-size:13px;
+      color:var(--text);
+    }
+    .nav{
+      display:flex;
+      gap:10px;
+      justify-content:space-between;
+      align-items:center;
+      padding:14px 16px;
+      border-top:1px solid var(--border);
+      background: rgba(0,0,0,.10);
+    }
+    .small{
+      font-size:12px;
+      color:var(--muted);
+    }
+    .grid2{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:14px;
+    }
+    @media (min-width: 900px){
+      .grid2{ grid-template-columns: 1.2fr .8fr; }
+    }
+    .score-table{
+      width:100%;
+      border-collapse: collapse;
+      font-size:13px;
+    }
+    .score-table th, .score-table td{
+      border-bottom:1px solid var(--border);
+      padding:10px 8px;
+      text-align:left;
+    }
+    .score-table th{
+      color:var(--muted);
+      font-weight:700;
+      font-size:12px;
+    }
+    .bar{
+      height:10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.08);
+      border:1px solid var(--border);
+      overflow:hidden;
+    }
+    .bar > div{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+    }
+    .notice{
+      color:var(--muted);
+      font-size:12px;
+      margin-top:8px;
+    }
+    .error{
+      color: #ffd1d1;
+      background: rgba(255,107,107,.12);
+      border: 1px solid rgba(255,107,107,.25);
+      padding:10px 12px;
+      border-radius: 14px;
+    }
+    .ok{
+      color: #d7ffe9;
+      background: rgba(110,243,197,.10);
+      border: 1px solid rgba(110,243,197,.25);
+      padding:10px 12px;
+      border-radius: 14px;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>🎲 Crónicas de Waterdeep — Test de Aptitud</h1>
+  <p class="subtitle">
+    Lee cada situación cuidadosamente. No elijas lo que crees que es “correcto”; elige lo que tu personaje haría en el calor del momento.
+    Piensa que tu personaje es capaz de ejecutar cualquier respuesta planteada.
+  </p>
+</header>
+
+<div class="wrap">
+  <div class="card">
+    <div class="card-inner">
+      <div class="row">
+        <div>
+          <label for="playerName">Nombre/alias del jugador</label>
+          <input id="playerName" type="text" placeholder="Ej: Jaime / Ana / 'ElBardo'" />
+        </div>
+        <div>
+          <label for="characterName">Nombre del personaje</label>
+          <input id="characterName" type="text" placeholder="Ej: Ecco / Theorc / 'Sir...'"/>
+        </div>
+        <div class="pill" id="autosavePill">💾 Autoguardado: activo</div>
+      </div>
+      <div class="row" style="margin-top:12px;">
+        <div class="progress" aria-label="Progreso"><div id="progressBar"></div></div>
+        <div class="pill"><span id="progressText">0/20</span></div>
+        <button class="btn secondary" id="toggleResultsBtn" type="button">👁️ Mostrar resultado al final: Sí</button>
+        <button class="btn danger" id="resetBtn" type="button">♻️ Reiniciar</button>
+      </div>
+      <p class="notice">Consejo: esto funciona en móvil. Si cierran la página, al volver se recupera el progreso (en este dispositivo).</p>
+    </div>
+  </div>
+
+  <div class="card" id="questionCard">
+    <div class="q-head">
+      <div>
+        <div class="q-title" id="qTitle">Escena</div>
+        <div class="q-meta" id="qMeta"></div>
+      </div>
+      <div class="pill">Escena <span id="qIndexPill">1</span>/20</div>
+    </div>
+    <div class="q-body">
+      <div class="context" id="qContext"></div>
+      <p class="prompt" id="qPrompt"></p>
+      <div class="options" id="options"></div>
+      <div id="msgArea" style="margin-top:12px;"></div>
+    </div>
+    <div class="nav">
+      <button class="btn secondary" id="prevBtn" type="button">← Anterior</button>
+      <div class="small">Puedes saltar escenas, pero no podrás enviar hasta completar las 20.</div>
+      <button class="btn" id="nextBtn" type="button">Siguiente →</button>
+    </div>
+  </div>
+
+  <div class="card" id="resultCard" style="display:none;">
+    <div class="q-head">
+      <div class="q-title">Resultado</div>
+      <div class="q-meta">Afinidad por facción</div>
+    </div>
+    <div class="card-inner grid2">
+      <div>
+        <canvas id="radar" width="520" height="420" style="width:100%;max-width:650px;background:rgba(0,0,0,.18);border:1px solid var(--border);border-radius:16px;"></canvas>
+        <p class="notice">Esto es una afinidad aproximada basada en tus elecciones; no te “encasilla”.</p>
+      </div>
+      <div>
+        <table class="score-table" id="scoreTable">
+          <thead>
+            <tr><th>Facción</th><th>%</th><th style="width:40%;">&nbsp;</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <div class="row" style="margin-top:12px; justify-content:flex-end;">
+          <button class="btn secondary" id="backToReviewBtn" type="button">↩ Revisar respuestas</button>
+          <button class="btn" id="submitBtn" type="button">📨 Enviar respuestas</button>
+        </div>
+        <div id="submitMsg" style="margin-top:12px;"></div>
+        <p class="notice">Al enviar, se mandan: nombre/alias, personaje, respuestas (A–D) y puntuación calculada.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/**
+ * CONFIG
+ * 1) Crea tu formulario en Formspree.
+ * 2) Copia el endpoint y pégalo aquí:
+ */
+const FORM_ENDPOINT = "https://formspree.io/f/XXXXYYYY"; // <-- REEMPLAZA
+
+/**
+ * Mostrar resultado al jugador: puedes cambiar el default aquí si quieres.
+ */
+let SHOW_RESULTS_TO_PLAYER = true;
+
+/**
+ * Facciones y etiquetas (8)
+ */
+const FACTIONS = [
+  { code:"HAR", name:"Harpers (Los Arpistas)" },
+  { code:"OOG", name:"Order of the Gauntlet (Orden del Guantelete)" },
+  { code:"EE",  name:"Emerald Enclave (Enclave Esmeralda)" },
+  { code:"LA",  name:"Lords' Alliance (Alianza de los Señores)" },
+  { code:"ZH",  name:"Zhentarim (La Red Negra)" },
+  { code:"BD",  name:"Bregan D'aerthe" },
+  { code:"GH",  name:"Gray Hands (Manos Grises)" },
+  { code:"XG",  name:"Xanathar Guild (Gremio de Xanathar)" },
+];
+
+/**
+ * MATRIZ DE SCORING (tu matriz): escena+opción -> {primary, secondary}
+ * Regla: +2 primary, +1 secondary
+ */
+const SCORE_KEY = {
+  "1-A": {p:"LA", s:"GH"}, "1-B": {p:"BD", s:"ZH"}, "1-C": {p:"XG", s:"ZH"}, "1-D": {p:"OOG", s:"HAR"},
+  "2-A": {p:"GH", s:"LA"}, "2-B": {p:"OOG", s:"EE"}, "2-C": {p:"ZH", s:"BD"}, "2-D": {p:"ZH", s:"XG"},
+  "3-A": {p:"OOG", s:"GH"}, "3-B": {p:"GH", s:"LA"}, "3-C": {p:"XG", s:"ZH"}, "3-D": {p:"BD", s:"HAR"},
+  "4-A": {p:"BD", s:"ZH"}, "4-B": {p:"LA", s:"OOG"}, "4-C": {p:"HAR", s:"GH"}, "4-D": {p:"XG", s:"ZH"},
+  "5-A": {p:"OOG", s:"LA"}, "5-B": {p:"XG", s:"ZH"}, "5-C": {p:"HAR", s:"BD"}, "5-D": {p:"GH", s:"LA"},
+  "6-A": {p:"LA", s:"ZH"}, "6-B": {p:"EE", s:"HAR"}, "6-C": {p:"EE", s:"LA"}, "6-D": {p:"XG", s:"ZH"},
+  "7-A": {p:"LA", s:"OOG"}, "7-B": {p:"HAR", s:"OOG"}, "7-C": {p:"LA", s:"HAR"}, "7-D": {p:"ZH", s:"XG"},
+  "8-A": {p:"LA", s:"HAR"}, "8-B": {p:"HAR", s:"BD"}, "8-C": {p:"BD", s:"LA"}, "8-D": {p:"GH", s:"HAR"},
+  "9-A": {p:"LA", s:"GH"}, "9-B": {p:"ZH", s:"HAR"}, "9-C": {p:"BD", s:"ZH"}, "9-D": {p:"HAR", s:"BD"},
+  "10-A":{p:"LA", s:"GH"}, "10-B":{p:"HAR", s:"GH"}, "10-C":{p:"ZH", s:"BD"}, "10-D":{p:"BD", s:"XG"},
+  "11-A":{p:"GH", s:"LA"}, "11-B":{p:"ZH", s:"BD"}, "11-C":{p:"HAR", s:"LA"}, "11-D":{p:"ZH", s:"BD"},
+  "12-A":{p:"LA", s:"GH"}, "12-B":{p:"LA", s:"HAR"}, "12-C":{p:"HAR", s:"BD"}, "12-D":{p:"ZH", s:"XG"},
+  "13-A":{p:"OOG", s:"LA"}, "13-B":{p:"HAR", s:"BD"}, "13-C":{p:"GH", s:"LA"}, "13-D":{p:"BD", s:"HAR"},
+  "14-A":{p:"LA", s:"HAR"}, "14-B":{p:"GH", s:"LA"}, "14-C":{p:"HAR", s:"BD"}, "14-D":{p:"HAR", s:"GH"},
+  "15-A":{p:"LA", s:"OOG"}, "15-B":{p:"HAR", s:"OOG"}, "15-C":{p:"BD", s:"ZH"}, "15-D":{p:"HAR", s:"LA"},
+  "16-A":{p:"LA", s:"GH"}, "16-B":{p:"HAR", s:"GH"}, "16-C":{p:"ZH", s:"BD"}, "16-D":{p:"GH", s:"ZH"},
+  "17-A":{p:"LA", s:"GH"}, "17-B":{p:"HAR", s:"BD"}, "17-C":{p:"GH", s:"LA"}, "17-D":{p:"ZH", s:"XG"},
+  "18-A":{p:"HAR", s:"LA"}, "18-B":{p:"HAR", s:"BD"}, "18-C":{p:"BD", s:"ZH"}, "18-D":{p:"XG", s:"BD"},
+  "19-A":{p:"LA", s:"OOG"}, "19-B":{p:"HAR", s:"LA"}, "19-C":{p:"OOG", s:"LA"}, "19-D":{p:"HAR", s:"BD"},
+  "20-A":{p:"LA", s:"GH"}, "20-B":{p:"HAR", s:"BD"}, "20-C":{p:"BD", s:"ZH"}, "20-D":{p:"GH", s:"LA"},
+};
+
+/**
+ * PREGUNTAS (20 escenas) — texto tal como lo tienes.
+ */
+const QUESTIONS = [
+  {
+    title:"ESCENA 1: La diplomacia de la daga",
+    context:"(Distrito de los Palacios · Anochecer)",
+    prompt:"Has descubierto que un Lord Enmascarado de Waterdeep está siendo chantajeado por una potencia extranjera. Tienes pruebas, pero exponerlo podría desestabilizar la economía de la ciudad. Decides escribirle una carta antes de actuar. ¿Qué tono y contenido tiene esa carta?",
+    options:{
+      A:"Una misiva formal, sellada con lacre, citando el Código Legal de Waterdeep. Le ofreces un plazo de 24 horas para entregarse a la Guardia de la Ciudad y mitigar su sentencia, o enfrentarás el peso de la ley sobre él.",
+      B:"Una nota anónima, escrita en clave y dejada en su almohada. Le ofreces “solucionar” su problema con los extranjeros a cambio de un favor futuro y acceso a sus redes de información. Mejor tener a un Lord en deuda contigo que en la cárcel.",
+      C:"No hay carta. Irrumpes en su estudio por la noche, pones tu daga en su mesa y le dices: “Tu vida me pertenece ahora. O trabajas para mi organización y nos das el 30% de tus ingresos, o mañana todo el mundo sabrá tu secreto”.",
+      D:"Una carta pública, clavada en las puertas del Castillo de Waterdeep. La verdad debe salir a la luz, caiga quien caiga."
+    }
+  },
+  {
+    title:"ESCENA 2: El artefacto de Bajomontaña",
+    context:"(Galería derrumbada · Sin testigos)",
+    prompt:"En las profundidades de una mazmorra, tu grupo encuentra el “Orbe de la Tormenta Psíquica”. Es inestable. Incluso envuelto y aislado, notas cómo interfiere con los pensamientos y la magia cercana. Podría arrasar varias manzanas si falla… o amplificar el poder arcano de quien lo controle de forma casi inimaginable. No hay testigos. Nadie más sabe que existe. ¿Qué haces con él?",
+    options:{
+      A:"Busco un mago disciplinado y leal a la ciudad. Consideras que son los únicos que tienen la autoridad y el conocimiento para contener algo así.",
+      B:"Lo destruyo in situ, aunque me cueste un gran esfuerzo o recursos. Nadie, ni siquiera nosotros, debería tener tal poder. Es una aberración contra el orden natural y mágico.",
+      C:"Me lo quedo en secreto. No lo usaré... todavía. Pero es una “póliza de seguro” perfecta. Si alguna vez me veo acorralado por enemigos superiores, tendré un as bajo la manga.",
+      D:"Lo vendo en el mercado negro de Waterdeep. El riesgo es alto, pero el oro que obtendría me permitiría financiar un ejército privado o comprar influencias que me darán poder real, no mágico."
+    }
+  },
+  {
+    title:"ESCENA 3: El disturbio en el Distrito del Puerto",
+    context:"(Distrito del Puerto · Mediodía)",
+    prompt:"Una plaga mágica ha vuelto violentos a los trabajadores del puerto. Están destrozando almacenes y atacando a los guardias. No son malvados, están hechizados. La Guardia está siendo superada y se prepara para usar fuerza letal. ¿Cómo intervienes?",
+    options:{
+      A:"Me lanzo al centro del caos usando magia de control y ataques no letales para incapacitar a tantos como pueda, protegiendo a los civiles con mi propio cuerpo si es necesario.",
+      B:"Me posiciono en los tejados y elimino a los líderes o a los más violentos con precisión quirúrgica.",
+      C:"Aprovecho la confusión. Mientras todos miran la pelea, saqueo los almacenes de especias y sedas que han quedado desprotegidos.",
+      D:"Uso una ilusión masiva o pirotecnia espectacular (fuegos artificiales, dragón ilusorio) para asustar a la multitud y dispersarlos. Soluciono el problema con estilo, sin derramar sangre y quedando como una leyenda local."
+    }
+  },
+  {
+    title:"ESCENA 4: El espía",
+    context:"(Sótano alquilado · Madrugada)",
+    prompt:"Has capturado a un espía de la banda conocida de Waterdeep. Sabes que tiene información sobre una entrada secreta a la ciudad. Él te mira con arrogancia y no habla. ¿Cuál es tu método?",
+    options:{
+      A:"Le ofrezco un trato comercial. “Tu jefe valora el beneficio. Si nos das la información, te pagaremos más de lo que él te ofrece y te dejaremos ir. Solo son negocios”.",
+      B:"“La ley dice que los espías son ejecutados”. Preparo el hacha del verdugo frente a él. No estoy jugando; si no hablas en 10 segundos, su cabeza rodará como advertencia para otros.",
+      C:"Lo dejo ir, pero le coloco un rastreador mágico o envío a mi familiar a seguirlo. Me llevará a su guarida y podré desmantelar toda la célula, no solo obtener un dato.",
+      D:"Traigo a la bestia más aterradora que conozca (o invoco un demonio menor) y lo dejo a solas con el prisionero."
+    }
+  },
+  {
+    title:"ESCENA 5: La elección del aliado",
+    context:"(Mesa privada · Trato rápido)",
+    prompt:"Para completar una misión suicida, necesitas un especialista externo. Tienes cuatro candidatos, pero solo puedes pagar a uno. ¿A quién contratas?",
+    options:{
+      A:"A un paladín de Torm, famoso por no mentir jamás y proteger a los débiles. Puede que sea rígido, pero sé que nunca me apuñalará por la espalda.",
+      B:"A un matón bugbear. Es brutal, estúpido y barato. Si muere, no me importa; y si sobrevive, es una fuerza de choque excelente.",
+      C:"A un bardo encantador. No es el mejor en combate, pero puede conseguirnos invitaciones, mapas y rumores que valen más que cien espadas.",
+      D:"A un mago de guerra. Necesito potencia de fuego bruta y disciplina. Alguien que siga órdenes y haga explotar cosas cuando yo lo diga."
+    }
+  },
+  {
+    title:"ESCENA 6: La bestia del bosque",
+    context:"(Límite del bosque · Amanecer)",
+    prompt:"Un grupo de nobles quiere talar una sección de un bosque para construir una nueva villa de lujo. Los espíritus del bosque están matando a los leñadores en represalia. Los nobles te contratan para “solucionarlo”. ¿Qué haces?",
+    options:{
+      A:"Cazo a los espíritus. Un contrato es un contrato, y la civilización necesita expandirse. Además, la paga de los nobles es excelente.",
+      B:"Saboteo la construcción por la noche, destruyo la maquinaria y asusto a los nobles para que se vayan. El bosque estaba allí antes que nosotros y debe ser respetado.",
+      C:"Negocio una tregua. Convenzo a los nobles de construir en otro lado o de hacer un santuario druídico a cambio de que los espíritus cesen los ataques. El equilibrio es la clave.",
+      D:"Mato a los nobles y culpo a los espíritus. Esos aristócratas son parásitos y el mundo estará mejor sin ellos. Además, puedo quedarme con sus joyas."
+    }
+  },
+  {
+    title:"ESCENA 7: El juicio",
+    context:"(Tribunal menor · Día gris)",
+    prompt:"Un joven ladrón ha robado medicinas para su hermana enferma. La ley de Waterdeep es clara: robo es robo y debe ser castigado (posiblemente perdiendo una mano o años de cárcel). Tú eres el testigo clave. ¿Qué declaras?",
+    options:{
+      A:"“Lo vi todo. Robó la medicina”. La ley es dura, pero es la ley. Si empezamos a hacer excepciones por pena, el sistema legal se derrumba.",
+      B:"“No vi nada, señor juez”. Miento descaradamente para protegerlo. A veces la justicia moral está por encima de la justicia legal. Luego le doy oro al chico para que huya.",
+      C:"Pago la fianza y el costo de la medicina yo mismo, convirtiendo el “robo” en una “compra tardía”. Uso mi influencia y dinero para resolver el problema sin romper el sistema ni arruinar al chico.",
+      D:"Aprovecho la situación. Testifico a su favor, pero luego busco al chico y le digo: “Te salvé la vida. Ahora me perteneces. Harás trabajos para mí hasta que tu deuda esté saldada”."
+    }
+  },
+  {
+    title:"ESCENA 8: El asiento vacío",
+    context:"(Recepción privada · Distrito de los Palacios · Música de cámara)",
+    prompt:"Estás infiltrado en una recepción reducida, pocas personas, todas importantes. Tu contacto debía presentarte a alguien clave, pero no ha llegado. Un noble veterano, claramente ebrio, ocupa el asiento reservado para esa persona y empieza a hablar en voz alta de asuntos que no debería conocer. Varias miradas se dirigen a él… y a ti. Si esto escala, tu presencia aquí se recordará. ¿Qué haces?",
+    options:{
+      A:"Te acercas y reconduces la conversación hacia un tema inocuo, dándole una salida elegante sin humillarlo.",
+      B:"Aprovechas lo que está diciendo y memorizas cada detalle, aunque eso implique quedarte expuesto unos minutos más.",
+      C:"Provocas una interrupción menor (un tropiezo, una discusión lateral) que obliga a redistribuir a los invitados.",
+      D:"Te levantas y abandonas la recepción antes de que nadie te asocie con la situación."
+    }
+  },
+  {
+    title:"ESCENA 9: El libro prestado",
+    context:"(Archivo secundario · Distrito de los Eruditos · Tarde)",
+    prompt:"Te han dado acceso temporal a una sala de archivo poco usada. Mientras revisas pergaminos menores, encuentras un libro mal catalogado entre tratados inofensivos. No tiene sello, no está registrado y al abrirlo reconoces fórmulas que no deberían aparecer en un archivo civil. Antes de que puedas decidir nada, oyes pasos en el pasillo. Alguien va a entrar. ¿Qué haces en ese instante?",
+    options:{
+      A:"Cierras el libro, lo colocas exactamente dónde estaba y te apartas de la estantería.",
+      B:"Arrancas una sola página, la doblas y la ocultas antes de devolver el libro a su sitio.",
+      C:"Te llevas el libro contigo mezclándolo con otros volúmenes autorizados.",
+      D:"Dejas el libro abierto sobre la mesa, como si hubiera sido consultado por cualquiera."
+    }
+  },
+  {
+    title:"ESCENA 10: El final del día",
+    context:"(Taberna menor · Noche cerrada)",
+    prompt:"Estás descansando en una taberna mirando tu bolsa de oro y tus heridas. ¿Qué pensamiento cruza tu mente?",
+    options:{
+      A:"“Ha valido la pena. La ciudad es un poco más segura hoy gracias a mí.”",
+      B:"“Espero que nadie descubra lo que he hecho hoy. Pero alguien tenía que ensuciarse las manos para que los demás duerman tranquilos.”",
+      C:"“Vaya día. He ganado una buena suma, he hecho contactos útiles y sigo vivo. Mañana a por más.”",
+      D:"“¡Qué aventura! El peligro, la emoción, la adrenalina... No podría vivir de otra manera.”"
+    }
+  },
+  {
+    title:"ESCENA 11: El encargo",
+    context:"(Cámara privada · Sin ventanas)",
+    prompt:"Una archimaga te convoca en su torre. Un artefacto robado, “un Anillo de Almacenamiento de Conjuros” cargado con desintegrar, ha aparecido en el mercado negro. Te autoriza a recuperarlo “por cualquier medio”, pero deja claro que no quiere testigos ni escándalos.",
+    options:{
+      A:"Sigo sus órdenes al pie de la letra. Actúo rápido, limpio y silencioso. Si alguien muere, es el precio de proteger la ciudad.",
+      B:"Recupero el anillo, pero dejo pruebas falsas que incriminen a una facción rival. Así se evita el escándalo… y se gana ventaja política.",
+      C:"Devuelvo el anillo, pero informo discretamente a otra facción de que la archimaga autorizó acciones extralegales. El poder debe vigilarse.",
+      D:"Me quedo con el anillo unos días “por seguridad”. Tener acceso al conjuro desintegrar puede cambiar muchas conversaciones."
+    }
+  },
+  {
+    title:"ESCENA 12: El Inventario Incompleto",
+    context:"(Almacén portuario · Primera hora de la mañana)",
+    prompt:"Revisando un almacén tras una incautación menor, descubres que faltan tres cajas en el inventario oficial. No hay firmas falsas ni sellos rotos: simplemente no están. El encargado te observa con atención, esperando a ver qué haces. Si informas, se abrirá una investigación larga y ruidosa. Si no lo haces, nadie notará la ausencia hasta dentro de semanas. ¿Qué haces antes de abandonar el almacén?",
+    options:{
+      A:"Anotas la falta en el registro y entregas el informe tal cual, sin añadir comentarios.",
+      B:"Hablas en privado con el encargado y le das una oportunidad para “corregir” el inventario antes del mediodía.",
+      C:"No escribes nada en el registro, pero marcas discretamente el suelo del almacén donde deberían haber estado las cajas, usando una señal que solo tú reconocerías después.",
+      D:"Ajustas el inventario para que cuadre y te llevas uno de los documentos originales."
+    }
+  },
+  {
+    title:"ESCENA 13: El hechizo en la Plaza de los Carros",
+    context:"(Plaza abarrotada · Instantes)",
+    prompt:"Una multitud se vuelve hostil tras un rumor de impuestos abusivos. Hay niños, mercaderes y agentes encubiertos mezclados. Tienes un solo conjuro antes de que la situación estalle.",
+    options:{
+      A:"Calmar emociones, buscando desactivar la violencia aunque los cabecillas escapen.",
+      B:"Sugestión sobre el líder visible para que disperse a la gente “por su propio bien”.",
+      C:"Patrón hipnótico, aunque algunos inocentes queden atrapados y vulnerables.",
+      D:"Ninguno. Dejas que la revuelta estalle para ver quién se mueve desde las sombras."
+    }
+  },
+  {
+    title:"ESCENA 14: El sermón interrumpido",
+    context:"(Distrito Norte · Tarde lluviosa)",
+    prompt:"En una plaza menor del Distrito Norte, un predicador improvisado reúne a curiosos. No invoca dioses, no blasfema, no incita a la violencia. Solo repite una idea incómoda: “Los templos no os protegen. Os protegen los que sangran por vosotros.” Ves a dos agentes de la Guardia observando sin intervenir. Un sacerdote de un templo cercano te reconoce y se acerca. En voz baja te dice: “Si esto sigue, mañana tendremos problemas”. ¿Qué haces ahora?",
+    options:{
+      A:"Te acercas al predicador y le haces preguntas públicas, llevándolo poco a poco a contradicciones hasta que la gente pierde interés.",
+      B:"Convences a la Guardia de que disperse la reunión por “obstrucción del paso”, sin detener a nadie.",
+      C:"Te mezclas con la multitud y memorizas a quiénes escuchan con más atención. Esto no va del predicador.",
+      D:"Esperas a que termine y lo sigues. Quieres saber quién le da de comer y dónde duerme."
+    }
+  },
+  {
+    title:"ESCENA 15: El Incidente del bastión",
+    context:"(Templo fortificado · Madrugada)",
+    prompt:"Durante una guardia nocturna en el bastión, una explosión menor sacude un patio interior. Un niño acólito ha reaccionado instintivamente a una caída lanzando escudo. No hay heridos. El prior del templo te mira serio: “Esto no debería pasar.” El niño está asustado. Nadie más ha visto el conjuro. ¿Qué haces antes de que llegue el amanecer?",
+    options:{
+      A:"Informas al prior y dejas que el templo gestione el asunto según sus reglas.",
+      B:"Hablas a solas con el niño y le pides que no vuelva a hacerlo hasta que tú regreses.",
+      C:"Haces que otro acólito se lleve la culpa del ruido para cerrar el incidente.",
+      D:"Pagas a un escribano independiente para que copie el informe y lo haga circular por los canales administrativos correctos, sin que tu nombre aparezca en ningún lado."
+    }
+  },
+  {
+    title:"ESCENA 16: La puerta sellada",
+    context:"(Indeterminada · Profundidad incierta)",
+    prompt:"Encuentras una puerta arcana sellada. Detrás hay algo que no debería estar allí, según tus conocimientos arcanos.",
+    options:{
+      A:"La sellas de nuevo y marcas la localización para futuras generaciones.",
+      B:"La abres parcialmente para estudiar lo que hay, sin cruzar del todo.",
+      C:"La fuerzas. Estás convencido de que alberga algo valioso.",
+      D:"Rediriges la puerta para que conecte con territorio enemigo."
+    }
+  },
+  {
+    title:"ESCENA 17: El prisionero",
+    context:"(Almacén vacío · Marea baja · Olor a sal y algas)",
+    prompt:"El hombre está atado a una columna. No es importante. No lleva insignias, no conoce planes completos, pero reconoces varios nombres cuando habla sin darse cuenta. Desde fuera llega el sonido de cuerdas tensándose: alguien está preparando un barco cercano. No tienes mucho tiempo. ¿Qué haces antes de que amanezca?",
+    options:{
+      A:"Lo entregas a la Guardia con un informe mínimo y te marchas antes de que empiecen las preguntas.",
+      B:"Haces correr el rumor de que ya ha hablado y lo liberas sin decirle nada más.",
+      C:"Lo dejas inconsciente en un punto visible del muelle, con una señal clara de advertencia, pero sin explicación.",
+      D:"Le das una tarea pequeña y verificable que debe cumplir en las próximas horas si quiere seguir respirando."
+    }
+  },
+  {
+    title:"ESCENA 18: El Símbolo en el callejón",
+    context:"(Distrito del Puerto · De noche)",
+    prompt:"Tras una operación limpia, un callejón queda vacío. No hay cuerpos, no hay testigos, pero alguien va a revisar el lugar antes del amanecer. Tienes tiempo para dejar una sola señal. No es obligatoria. Nadie te lo ha pedido.",
+    options:{
+      A:"No dejas nada. El silencio es más inquietante que cualquier marca.",
+      B:"Un símbolo antiguo, apenas visible, que solo reconocerá quien sepa exactamente qué buscar.",
+      C:"Una marca burda y evidente, fácil de interpretar, aunque no sea del todo cierta.",
+      D:"Dejas un objeto cotidiano colocado de forma deliberada."
+    }
+  },
+  {
+    title:"ESCENA 19: La reliquia devuelta",
+    context:"(Camino Alto · Mediodía)",
+    prompt:"Te prestaron una reliquia sagrada para una misión concreta que te resultó muy útil. La devuelves tal y como te la dejaron, en un cofre sellado. Antes de entregarla, notas algo: el sello interior ha sido manipulado. No sabes si antes… o después de usarla. Nadie más parece haberse dado cuenta. ¿Qué haces?",
+    options:{
+      A:"La entregas tal cual. No es tu función cuestionar herramientas que ya han cumplido su propósito.",
+      B:"Cierras el cofre delante del custodio sin mencionar el detalle, pero te aseguras de que vea el estado del sello antes de marcharte.",
+      C:"Reparas el sello discretamente antes de entregarla.",
+      D:"Retrasas la entrega alegando un motivo menor y observas quién pregunta por la reliquia y con qué urgencia."
+    }
+  },
+  {
+    title:"ESCENA 20: La cuenta del Portal Bostezante",
+    context:"(Cierre / Poder real / Huella invisible)",
+    prompt:"Es tarde. El Portal Bostezante está medio vacío. Durnan te deja una jarra y una tablilla de cuentas sin decir nada. Alguien ha pagado toda la deuda de la noche: bebidas, habitaciones, daños… todo. No hay nombre. Solo una marca distinta según quién haya hecho el pago. Durnan te pregunta una sola cosa: “¿Quieres saber quién ha sido?” ¿Qué haces?",
+    options:{
+      A:"Dices que no. Te igual quién haya pagado; lo importante es que el problema está resuelto. Te bebes la cerveza y te vas.",
+      B:"Le pides que deje la tablilla donde está y observas quién reacciona cuando Durnan comenta el pago en voz alta.",
+      C:"Pides que corra la voz de que tú has saldado la cuenta. No lo desmientes ni lo confirmas.",
+      D:"Pagas tú mismo una parte menor de la cuenta y dejas claro que no quieres explicaciones."
+    }
+  }
+];
+
+// ---------- UI state ----------
+const playerNameEl = document.getElementById("playerName");
+const characterNameEl = document.getElementById("characterName");
+const resetBtn = document.getElementById("resetBtn");
+const toggleResultsBtn = document.getElementById("toggleResultsBtn");
+const progressBar = document.getElementById("progressBar");
+const progressText = document.getElementById("progressText");
+
+const qTitle = document.getElementById("qTitle");
+const qMeta = document.getElementById("qMeta");
+const qContext = document.getElementById("qContext");
+const qPrompt = document.getElementById("qPrompt");
+const optionsEl = document.getElementById("options");
+const qIndexPill = document.getElementById("qIndexPill");
+const msgArea = document.getElementById("msgArea");
+
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+
+const questionCard = document.getElementById("questionCard");
+const resultCard = document.getElementById("resultCard");
+const backToReviewBtn = document.getElementById("backToReviewBtn");
+const submitBtn = document.getElementById("submitBtn");
+const submitMsg = document.getElementById("submitMsg");
+const scoreTableBody = document.querySelector("#scoreTable tbody");
+const radarCanvas = document.getElementById("radar");
+const radarCtx = radarCanvas.getContext("2d");
+
+const LS_KEY = "wd_affinity_quiz_v1";
+
+let state = {
+  idx: 0,
+  playerName: "",
+  characterName: "",
+  showResults: SHOW_RESULTS_TO_PLAYER,
+  answers: Array(20).fill(""), // "A".."D"
+};
+
+// ---------- helpers ----------
+function setMsg(html, cls=""){
+  msgArea.innerHTML = html ? `<div class="${cls}">${html}</div>` : "";
+}
+function setSubmitMsg(html, cls=""){
+  submitMsg.innerHTML = html ? `<div class="${cls}">${html}</div>` : "";
+}
+function save(){
+  const payload = {
+    ...state,
+    playerName: playerNameEl.value.trim(),
+    characterName: characterNameEl.value.trim(),
+  };
+  localStorage.setItem(LS_KEY, JSON.stringify(payload));
+}
+function load(){
+  const raw = localStorage.getItem(LS_KEY);
+  if(!raw) return;
+  try{
+    const data = JSON.parse(raw);
+    if(data && Array.isArray(data.answers) && data.answers.length===20){
+      state = { ...state, ...data };
+      playerNameEl.value = state.playerName || "";
+      characterNameEl.value = state.characterName || "";
+    }
+  }catch(e){}
+}
+function resetAll(){
+  if(!confirm("¿Seguro que quieres reiniciar el test en este dispositivo?")) return;
+  localStorage.removeItem(LS_KEY);
+  state = {
+    idx: 0,
+    playerName: "",
+    characterName: "",
+    showResults: true,
+    answers: Array(20).fill(""),
+  };
+  playerNameEl.value = "";
+  characterNameEl.value = "";
+  setSubmitMsg("");
+  render();
+  save();
+}
+function completedCount(){
+  return state.answers.filter(x=>x==="A"||x==="B"||x==="C"||x==="D").length;
+}
+function updateProgress(){
+  const done = completedCount();
+  progressText.textContent = `${done}/20`;
+  progressBar.style.width = `${(done/20)*100}%`;
+}
+function currentKey(){
+  const scene = state.idx + 1;
+  const opt = state.answers[state.idx];
+  if(!opt) return null;
+  return `${scene}-${opt}`;
+}
+
+function computeScores(){
+  const pts = {};
+  FACTIONS.forEach(f=>pts[f.code]=0);
+
+  state.answers.forEach((opt, i) => {
+    if(!opt) return;
+    const key = `${i+1}-${opt}`;
+    const map = SCORE_KEY[key];
+    if(!map) return;
+    pts[map.p] += 2;
+    pts[map.s] += 1;
+  });
+
+  const total = Object.values(pts).reduce((a,b)=>a+b,0) || 1;
+  const pct = {};
+  Object.entries(pts).forEach(([k,v]) => pct[k] = v/total);
+
+  return { pts, pct, total };
+}
+
+// Radar chart (simple, no libs)
+function drawRadar(pct){
+  const W = radarCanvas.width, H = radarCanvas.height;
+  radarCtx.clearRect(0,0,W,H);
+
+  const cx = W/2, cy = H/2 + 10;
+  const radius = Math.min(W, H)*0.33;
+
+  const labels = FACTIONS.map(f=>f.code);
+  const values = FACTIONS.map(f=>pct[f.code] || 0);
+
+  // background
+  radarCtx.fillStyle = "rgba(0,0,0,.12)";
+  radarCtx.fillRect(0,0,W,H);
+
+  // grid
+  const rings = 5;
+  radarCtx.strokeStyle = "rgba(255,255,255,.10)";
+  radarCtx.lineWidth = 1;
+
+  for(let r=1; r<=rings; r++){
+    const rr = radius * (r/rings);
+    radarCtx.beginPath();
+    for(let i=0; i<labels.length; i++){
+      const ang = (Math.PI*2) * (i/labels.length) - Math.PI/2;
+      const x = cx + rr*Math.cos(ang);
+      const y = cy + rr*Math.sin(ang);
+      if(i===0) radarCtx.moveTo(x,y);
+      else radarCtx.lineTo(x,y);
+    }
+    radarCtx.closePath();
+    radarCtx.stroke();
+  }
+
+  // axes + labels
+  radarCtx.fillStyle = "rgba(232,238,252,.9)";
+  radarCtx.font = "12px system-ui";
+  for(let i=0; i<labels.length; i++){
+    const ang = (Math.PI*2) * (i/labels.length) - Math.PI/2;
+    const x = cx + (radius+18)*Math.cos(ang);
+    const y = cy + (radius+18)*Math.sin(ang);
+    radarCtx.strokeStyle = "rgba(255,255,255,.12)";
+    radarCtx.beginPath();
+    radarCtx.moveTo(cx,cy);
+    radarCtx.lineTo(cx + radius*Math.cos(ang), cy + radius*Math.sin(ang));
+    radarCtx.stroke();
+
+    const text = labels[i];
+    const tw = radarCtx.measureText(text).width;
+    radarCtx.fillText(text, x - tw/2, y + 4);
+  }
+
+  // polygon
+  radarCtx.beginPath();
+  for(let i=0; i<labels.length; i++){
+    const ang = (Math.PI*2) * (i/labels.length) - Math.PI/2;
+    const rr = radius * values[i];
+    const x = cx + rr*Math.cos(ang);
+    const y = cy + rr*Math.sin(ang);
+    if(i===0) radarCtx.moveTo(x,y);
+    else radarCtx.lineTo(x,y);
+  }
+  radarCtx.closePath();
+  radarCtx.fillStyle = "rgba(122,162,255,.18)";
+  radarCtx.strokeStyle = "rgba(110,243,197,.55)";
+  radarCtx.lineWidth = 2;
+  radarCtx.fill();
+  radarCtx.stroke();
+
+  // title
+  radarCtx.fillStyle = "rgba(232,238,252,.9)";
+  radarCtx.font = "700 14px system-ui";
+  radarCtx.fillText("Afinidad por facción", 18, 26);
+}
+
+function renderScoreTable(pct){
+  scoreTableBody.innerHTML = "";
+  // Sort descending
+  const sorted = [...FACTIONS].map(f=>({ ...f, v: pct[f.code]||0 }))
+    .sort((a,b)=>b.v-a.v);
+
+  sorted.forEach(f=>{
+    const tr = document.createElement("tr");
+    const td1 = document.createElement("td");
+    td1.textContent = f.name;
+    const td2 = document.createElement("td");
+    td2.textContent = `${Math.round(f.v*100)}%`;
+    const td3 = document.createElement("td");
+    const bar = document.createElement("div");
+    bar.className = "bar";
+    const inner = document.createElement("div");
+    inner.style.width = `${Math.round(f.v*100)}%`;
+    bar.appendChild(inner);
+    td3.appendChild(bar);
+    tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3);
+    scoreTableBody.appendChild(tr);
+  });
+}
+
+function showResults(){
+  const { pct } = computeScores();
+  drawRadar(pct);
+  renderScoreTable(pct);
+  questionCard.style.display = "none";
+  resultCard.style.display = "";
+}
+
+function showQuestion(){
+  questionCard.style.display = "";
+  resultCard.style.display = "none";
+}
+
+function canSubmit(){
+  return completedCount() === 20 && playerNameEl.value.trim().length > 0 && characterNameEl.value.trim().length > 0;
+}
+
+function render(){
+  updateProgress();
+
+  toggleResultsBtn.textContent = `👁️ Mostrar resultado al final: ${state.showResults ? "Sí" : "No"}`;
+
+  const q = QUESTIONS[state.idx];
+  qTitle.textContent = q.title;
+  qContext.textContent = q.context;
+  qPrompt.textContent = q.prompt;
+  qMeta.textContent = "";
+  qIndexPill.textContent = String(state.idx+1);
+
+  optionsEl.innerHTML = "";
+  ["A","B","C","D"].forEach(letter=>{
+    const div = document.createElement("div");
+    div.className = "opt" + (state.answers[state.idx]===letter ? " selected" : "");
+    div.onclick = () => {
+      state.answers[state.idx] = letter;
+      setMsg("", "");
+      save();
+      render();
+    };
+    const badge = document.createElement("div");
+    badge.className = "letter";
+    badge.textContent = letter;
+    const text = document.createElement("div");
+    text.className = "text";
+    text.textContent = q.options[letter];
+    div.appendChild(badge);
+    div.appendChild(text);
+    optionsEl.appendChild(div);
+  });
+
+  prevBtn.disabled = state.idx===0;
+  nextBtn.textContent = state.idx===19 ? "Finalizar →" : "Siguiente →";
+  submitBtn.disabled = !canSubmit();
+
+  // Decide whether to show result screen when finished
+  if(state.idx===19 && state.answers[19] && completedCount()===20){
+    // Still stay in question view; user presses "Finalizar" to go to end.
+  }
+}
+
+async function submit(){
+  setSubmitMsg("", "");
+  if(!canSubmit()){
+    setSubmitMsg("Falta completar todo y/o indicar nombre del jugador y del personaje.", "error");
+    return;
+  }
+  if(!FORM_ENDPOINT.includes("formspree.io")){
+    setSubmitMsg("Falta configurar FORM_ENDPOINT con tu URL de Formspree.", "error");
+    return;
+  }
+
+  submitBtn.disabled = true;
+  const { pts, pct, total } = computeScores();
+
+  const payload = {
+    playerName: playerNameEl.value.trim(),
+    characterName: characterNameEl.value.trim(),
+    timestamp: new Date().toISOString(),
+    answers: state.answers.map((x,i)=>({ scene:i+1, answer:x })),
+    scores_points: pts,
+    scores_percent: pct,
+    total_points: total,
+    // útil para filtrar en tu panel:
+    top3: [...FACTIONS].map(f=>({code:f.code, name:f.name, pct:pct[f.code]||0}))
+      .sort((a,b)=>b.pct-a.pct).slice(0,3),
+    userAgent: navigator.userAgent
+  };
+
+  try{
+    const res = await fetch(FORM_ENDPOINT, {
+      method:"POST",
+      headers: { "Content-Type":"application/json", "Accept":"application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    if(res.ok){
+      setSubmitMsg("✅ Enviado. Gracias. Ya puedes cerrar esta página.", "ok");
+      // opcional: bloquear cambios tras enviar
+      // localStorage.removeItem(LS_KEY);
+    }else{
+      const t = await res.text();
+      setSubmitMsg("❌ Error al enviar. Revisa tu Formspree y el endpoint. Detalle: " + t.slice(0,180), "error");
+      submitBtn.disabled = false;
+    }
+  }catch(e){
+    setSubmitMsg("❌ No se pudo enviar (sin conexión o endpoint incorrecto).", "error");
+    submitBtn.disabled = false;
+  }
+}
+
+// ---------- events ----------
+playerNameEl.addEventListener("input", save);
+characterNameEl.addEventListener("input", save);
+
+toggleResultsBtn.addEventListener("click", () => {
+  state.showResults = !state.showResults;
+  save();
+  render();
+});
+
+resetBtn.addEventListener("click", resetAll);
+
+prevBtn.addEventListener("click", () => {
+  if(state.idx>0){ state.idx--; save(); render(); }
+});
+
+nextBtn.addEventListener("click", () => {
+  if(state.idx<19){
+    state.idx++;
+    save();
+    render();
+    return;
+  }
+  // final
+  if(completedCount() < 20){
+    setMsg("Te faltan escenas por responder. Puedes volver y completar antes de enviar.", "error");
+    if(state.showResults){
+      showResults();
+    }
+    return;
+  }
+  // show results or go straight to submit
+  if(state.showResults){
+    showResults();
+  }else{
+    // si no quieres mostrar resultado, enviamos directamente desde aquí:
+    showResults(); // render hidden data; keeps flow simple
+    // oculta si se desea:
+    resultCard.style.display = ""; questionCard.style.display="none";
+  }
+});
+
+backToReviewBtn.addEventListener("click", () => {
+  showQuestion();
+});
+
+submitBtn.addEventListener("click", submit);
+
+// ---------- init ----------
+load();
+SHOW_RESULTS_TO_PLAYER = state.showResults;
+render();
+</script>
+</body>
+</html>
