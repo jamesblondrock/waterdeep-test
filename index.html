@@ -1012,8 +1012,7 @@ function renderScoreTable(pct){
  * Resultados protegidos (jugador) + bypass DM (?dm=true)
  * ========================= */
 function requestPassword(){
-  const input = prompt("🔒 Resultados protegidos.
-Introduce la contraseña para ver el resultado final:");
+  const input = prompt("🔒 Resultados protegidos.\nIntroduce la contraseña para ver el resultado final:");
   if (input === null) return false;
   if (input === RESULTS_PASSWORD) return true;
   alert("❌ Contraseña incorrecta.");
