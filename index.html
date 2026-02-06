@@ -1,47 +1,113 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" data-theme="night">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Crónicas de Waterdeep — Test de Aptitud</title>
+
+  <!-- Tipografías estilo compendio (gratis) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=IM+Fell+English:ital@0;1&family=Alegreya:wght@400;600;700&display=swap" rel="stylesheet">
+
   <style>
     :root{
-      --bg:#0b1020;
-      --card:#121a33;
-      --muted:#9fb0d0;
-      --text:#e8eefc;
-      --accent:#7aa2ff;
-      --accent2:#6ef3c5;
-      --danger:#ff6b6b;
-      --border:rgba(255,255,255,.10);
-      --shadow: 0 12px 30px rgba(0,0,0,.35);
+      --bg-night-1:#0b0d11;
+      --bg-night-2:#121521;
+      --bg-night-3:#0b0d11;
+
+      --ink:#1f1a12;                /* tinta */
+      --paper:#f2e6cf;              /* pergamino */
+      --paper2:#e8d8b8;             /* sombra pergamino */
+
+      --muted:#5b4a34;              /* sepia */
+      --text:#1f1a12;
+
+      --accent:#7b1f1f;             /* rojo lacre */
+      --accent2:#2f6b4f;            /* verde sello */
+      --danger:#8b1e1e;
+
+      --border:rgba(31,26,18,.18);
+      --shadow: 0 18px 45px rgba(0,0,0,.45);
       --radius:18px;
+
+      --font-title: "Cinzel", serif;
+      --font-body: "Alegreya", serif;
+      --font-flair: "IM Fell English", serif;
+
+      /* ✅ Header colors (por tema) */
+      --headerTitle: #f4e9d4;
+      --headerSub: rgba(244,233,212,.88);
+      --headerSigil: rgba(244,233,212,.80);
+      --headerShadow: 0 2px 10px rgba(0,0,0,.45);
     }
+
+    /* Tema “Pergamino” (claro / día) */
+    :root[data-theme="parchment"]{
+      --bg-night-1:#f7f1e3;
+      --bg-night-2:#f3ead6;
+      --bg-night-3:#efe2c7;
+      --shadow: 0 10px 24px rgba(10,20,40,.12);
+
+      /* ✅ Header legible en claro */
+      --headerTitle: rgba(31,26,18,.92);
+      --headerSub: rgba(31,26,18,.70);
+      --headerSigil: rgba(31,26,18,.55);
+      --headerShadow: none;
+    }
+
+    /* Tema “Noche” (oscuro / tinta) */
+    :root[data-theme="night"]{
+      --bg-night-1:#0b0d11;
+      --bg-night-2:#121521;
+      --bg-night-3:#0b0d11;
+      --shadow: 0 18px 45px rgba(0,0,0,.45);
+      /* header usa los defaults de :root */
+    }
+
     *{box-sizing:border-box}
+
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      background: radial-gradient(1200px 600px at 15% 10%, rgba(122,162,255,.18), transparent 60%),
-                  radial-gradient(900px 450px at 75% 0%, rgba(110,243,197,.14), transparent 60%),
-                  var(--bg);
-      color:var(--text);
+      font-family: var(--font-body);
+      color: var(--text);
       line-height:1.35;
+      background:
+        radial-gradient(1100px 600px at 10% 5%, rgba(123,31,31,.15), transparent 60%),
+        radial-gradient(900px 500px at 80% 0%, rgba(47,107,79,.12), transparent 60%),
+        linear-gradient(180deg, var(--bg-night-1) 0%, var(--bg-night-2) 45%, var(--bg-night-3) 100%);
     }
+
     header{
       padding:28px 16px 10px;
       max-width:980px;
       margin:0 auto;
     }
+
+    /* ✅ Header usa variables por tema */
     h1{
       margin:0 0 8px;
       font-size: clamp(20px, 2.8vw, 30px);
-      letter-spacing:.2px;
+      font-family: var(--font-title);
+      letter-spacing:.5px;
+      color: var(--headerTitle);
+      text-shadow: var(--headerShadow);
     }
+
     .subtitle{
-      color:var(--muted);
       margin:0;
       font-size:14px;
+      font-family: var(--font-flair);
+      color: var(--headerSub);
     }
+
+    .sigil{
+      margin: 10px 0 0;
+      font-family: var(--font-flair);
+      color: var(--headerSigil);
+      letter-spacing: .6px;
+    }
+
     .wrap{
       max-width:980px;
       margin:0 auto;
@@ -50,214 +116,300 @@
       grid-template-columns: 1fr;
       gap:14px;
     }
+
+    /* Panel principal como pergamino */
     .card{
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      background:
+        radial-gradient(1200px 380px at 30% 0%, rgba(255,255,255,.35), transparent 55%),
+        linear-gradient(180deg, var(--paper) 0%, var(--paper2) 100%);
       border:1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow:hidden;
     }
+
     .card-inner{ padding:16px; }
+
     .row{
       display:flex; gap:12px; flex-wrap:wrap;
       align-items:center;
     }
+
     label{
       display:block;
       font-size:12px;
-      color:var(--muted);
+      color: rgba(31,26,18,.72);
       margin-bottom:6px;
     }
+
     input[type="text"]{
       width:min(380px, 100%);
       padding:10px 12px;
       border-radius: 12px;
-      border:1px solid var(--border);
-      background: rgba(0,0,0,.25);
-      color:var(--text);
+      border:1px solid rgba(31,26,18,.22);
+      background: rgba(255,255,255,.35);
+      color: var(--ink);
       outline:none;
+      font-family: var(--font-body);
     }
-    input[type="text"]:focus{ border-color: rgba(122,162,255,.55); }
+
+    input[type="text"]:focus{
+      border-color: rgba(123,31,31,.40);
+      box-shadow: 0 0 0 3px rgba(123,31,31,.10);
+    }
+
     .pill{
       display:inline-flex;
       align-items:center;
       gap:8px;
       padding:8px 10px;
       border-radius: 999px;
-      border:1px solid var(--border);
-      color:var(--muted);
+      border:1px solid rgba(31,26,18,.18);
+      color: rgba(31,26,18,.72);
       font-size:12px;
-      background: rgba(0,0,0,.18);
+      background: rgba(31,26,18,.06);
     }
+
     .btn{
       appearance:none;
-      border:1px solid var(--border);
-      background: rgba(122,162,255,.14);
-      color:var(--text);
+      border:1px solid rgba(123,31,31,.25);
+      background: rgba(123,31,31,.10);
+      color: var(--ink);
       padding:10px 12px;
       border-radius: 14px;
       cursor:pointer;
-      font-weight:600;
+      font-weight:700;
+      font-family: var(--font-title);
+      letter-spacing:.3px;
     }
-    .btn:hover{ border-color: rgba(122,162,255,.55); }
+
+    .btn:hover{ border-color: rgba(123,31,31,.45); }
+
     .btn.secondary{
-      background: rgba(255,255,255,.06);
+      background: rgba(31,26,18,.06);
+      border-color: rgba(31,26,18,.18);
     }
+
     .btn.danger{
-      background: rgba(255,107,107,.12);
+      background: rgba(139,30,30,.10);
+      border-color: rgba(139,30,30,.25);
     }
+
     .btn:disabled{
       opacity:.45;
       cursor:not-allowed;
     }
+
     .progress{
       height:10px;
-      background: rgba(255,255,255,.08);
+      background: rgba(31,26,18,.08);
       border-radius:999px;
       overflow:hidden;
-      border:1px solid var(--border);
+      border:1px solid rgba(31,26,18,.18);
       flex:1;
       min-width:200px;
     }
+
     .progress > div{
       height:100%;
       width:0%;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      background: linear-gradient(90deg, rgba(123,31,31,.85), rgba(47,107,79,.75));
       border-radius:999px;
       transition: width .25s ease;
     }
+
+    /* Cabecera de escena como “placa” */
     .q-head{
       padding:14px 16px;
-      border-bottom:1px solid var(--border);
-      background: rgba(0,0,0,.12);
+      border-bottom:1px solid rgba(31,26,18,.20);
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.06)),
+        repeating-linear-gradient(90deg, rgba(0,0,0,.03) 0 14px, rgba(255,255,255,.00) 14px 28px);
       display:flex;
       gap:10px;
       justify-content:space-between;
       align-items:center;
     }
+
     .q-title{
       font-weight:700;
-      letter-spacing:.2px;
+      letter-spacing:.4px;
+      font-family: var(--font-title);
     }
+
     .q-meta{
-      color:var(--muted);
+      color: rgba(31,26,18,.72);
       font-size:12px;
     }
-    .q-body{
-      padding:16px;
-    }
+
+    .q-body{ padding:16px; }
+
     .context{
-      color:var(--muted);
+      color: rgba(31,26,18,.72);
       font-size:12px;
       margin-bottom:10px;
+      font-family: var(--font-flair);
     }
+
+    .rule{
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(31,26,18,.35), transparent);
+      margin: 8px 0 12px;
+    }
+
     .prompt{
       margin:0 0 14px;
-      font-size:14px;
+      font-size:15px;
     }
+
+    .prompt::first-letter{
+      font-family: var(--font-title);
+      font-size: 34px;
+      line-height: 1;
+      float: left;
+      margin: 2px 10px 0 0;
+      color: rgba(123,31,31,.85);
+    }
+
     .options{
       display:grid;
       gap:10px;
     }
+
     .opt{
-      border:1px solid var(--border);
+      border:1px solid rgba(31,26,18,.22);
       border-radius: 14px;
       padding:12px;
-      background: rgba(0,0,0,.20);
+      background: rgba(255,255,255,.28);
       cursor:pointer;
       transition: transform .05s ease, border-color .15s ease;
       display:flex;
       gap:12px;
       align-items:flex-start;
     }
-    .opt:hover{ border-color: rgba(255,255,255,.22); }
+
+    .opt:hover{ border-color: rgba(31,26,18,.35); }
     .opt:active{ transform: scale(.995); }
+
     .opt .letter{
       width:28px; height:28px;
       border-radius:10px;
       display:flex; align-items:center; justify-content:center;
-      background: rgba(122,162,255,.16);
-      border:1px solid rgba(122,162,255,.35);
+      background: rgba(123,31,31,.10);
+      border:1px solid rgba(123,31,31,.25);
       font-weight:800;
       flex:0 0 auto;
+      font-family: var(--font-title);
+      color: var(--ink);
     }
+
     .opt.selected{
-      border-color: rgba(122,162,255,.55);
-      background: rgba(122,162,255,.14);
+      border-color: rgba(47,107,79,.35);
+      background: rgba(47,107,79,.10);
     }
+
     .opt .text{
       font-size:13px;
-      color:var(--text);
+      color: var(--ink);
     }
+
     .nav{
       display:flex;
       gap:10px;
       justify-content:space-between;
       align-items:center;
       padding:14px 16px;
-      border-top:1px solid var(--border);
-      background: rgba(0,0,0,.10);
+      border-top:1px solid rgba(31,26,18,.18);
+      background: rgba(31,26,18,.05);
     }
+
     .small{
       font-size:12px;
-      color:var(--muted);
+      color: rgba(31,26,18,.72);
     }
+
     .grid2{
       display:grid;
       grid-template-columns: 1fr;
       gap:14px;
     }
+
     @media (min-width: 900px){
       .grid2{ grid-template-columns: 1.2fr .8fr; }
     }
+
     .score-table{
       width:100%;
       border-collapse: collapse;
       font-size:13px;
     }
+
     .score-table th, .score-table td{
-      border-bottom:1px solid var(--border);
+      border-bottom:1px solid rgba(31,26,18,.18);
       padding:10px 8px;
       text-align:left;
     }
+
     .score-table th{
-      color:var(--muted);
+      color: rgba(31,26,18,.72);
       font-weight:700;
       font-size:12px;
+      font-family: var(--font-title);
+      letter-spacing:.2px;
     }
+
     .bar{
       height:10px;
       border-radius:999px;
-      background: rgba(255,255,255,.08);
-      border:1px solid var(--border);
+      background: rgba(31,26,18,.08);
+      border:1px solid rgba(31,26,18,.18);
       overflow:hidden;
     }
+
     .bar > div{
       height:100%;
       width:0%;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      background: linear-gradient(90deg, rgba(123,31,31,.85), rgba(47,107,79,.75));
     }
+
     .notice{
-      color:var(--muted);
+      color: rgba(31,26,18,.72);
       font-size:12px;
       margin-top:8px;
+      font-family: var(--font-flair);
     }
+
     .error{
-      color: #ffd1d1;
-      background: rgba(255,107,107,.12);
-      border: 1px solid rgba(255,107,107,.25);
+      color: #5a1a1a;
+      background: rgba(139,30,30,.10);
+      border: 1px solid rgba(139,30,30,.22);
       padding:10px 12px;
       border-radius: 14px;
+      font-family: var(--font-body);
     }
+
     .ok{
-      color: #d7ffe9;
-      background: rgba(110,243,197,.10);
-      border: 1px solid rgba(110,243,197,.25);
+      color: #12452f;
+      background: rgba(47,107,79,.10);
+      border: 1px solid rgba(47,107,79,.22);
       padding:10px 12px;
       border-radius: 14px;
+      font-family: var(--font-body);
+    }
+
+    /* Radar como lámina */
+    #radar{
+      width:100%;
+      max-width:650px;
+      background:
+        radial-gradient(800px 320px at 30% 0%, rgba(255,255,255,.35), transparent 60%),
+        linear-gradient(180deg, rgba(242,230,207,.95), rgba(232,216,184,.95));
+      border: 1px solid rgba(31,26,18,.18) !important;
+      border-radius:16px;
     }
   </style>
 </head>
+
 <body>
 <header>
   <h1>🎲 Crónicas de Waterdeep — Test de Aptitud</h1>
@@ -265,6 +417,7 @@
     Lee cada situación cuidadosamente. No elijas lo que crees que es “correcto”; elige lo que tu personaje haría en el calor del momento.
     Piensa que tu personaje es capaz de ejecutar cualquier respuesta planteada.
   </p>
+  <p class="sigil">— Registro de Aventureros · Waterdeep —</p>
 </header>
 
 <div class="wrap">
@@ -277,17 +430,21 @@
         </div>
         <div>
           <label for="characterName">Nombre del personaje</label>
-          <input id="characterName" type="text" placeholder="Ej: Ecco / Theorc / 'Sir...'"/>
+          <input id="characterName" type="text" placeholder="Ej: Ecco / Theorc / 'Sir...'" />
         </div>
         <div class="pill" id="autosavePill">💾 Autoguardado: activo</div>
       </div>
+
       <div class="row" style="margin-top:12px;">
         <div class="progress" aria-label="Progreso"><div id="progressBar"></div></div>
         <div class="pill"><span id="progressText">0/20</span></div>
+
+        <button class="btn secondary" id="themeBtn" type="button">🌙 Noche</button>
         <button class="btn secondary" id="toggleResultsBtn" type="button">👁️ Mostrar resultado al final: Sí</button>
         <button class="btn danger" id="resetBtn" type="button">♻️ Reiniciar</button>
       </div>
-      <p class="notice">Consejo: esto funciona en móvil. Si cierran la página, al volver se recupera el progreso (en este dispositivo).</p>
+
+      <p class="notice">Consejo: funciona en móvil. Si cierras la página, al volver se recupera el progreso (en este dispositivo).</p>
     </div>
   </div>
 
@@ -299,12 +456,15 @@
       </div>
       <div class="pill">Escena <span id="qIndexPill">1</span>/20</div>
     </div>
+
     <div class="q-body">
       <div class="context" id="qContext"></div>
+      <div class="rule"></div>
       <p class="prompt" id="qPrompt"></p>
       <div class="options" id="options"></div>
       <div id="msgArea" style="margin-top:12px;"></div>
     </div>
+
     <div class="nav">
       <button class="btn secondary" id="prevBtn" type="button">← Anterior</button>
       <div class="small">Puedes saltar escenas, pero no podrás enviar hasta completar las 20.</div>
@@ -317,11 +477,13 @@
       <div class="q-title">Resultado</div>
       <div class="q-meta">Afinidad por facción</div>
     </div>
+
     <div class="card-inner grid2">
       <div>
-        <canvas id="radar" width="520" height="420" style="width:100%;max-width:650px;background:rgba(0,0,0,.18);border:1px solid var(--border);border-radius:16px;"></canvas>
+        <canvas id="radar" width="520" height="420"></canvas>
         <p class="notice">Esto es una afinidad aproximada basada en tus elecciones; no te “encasilla”.</p>
       </div>
+
       <div>
         <table class="score-table" id="scoreTable">
           <thead>
@@ -329,10 +491,12 @@
           </thead>
           <tbody></tbody>
         </table>
+
         <div class="row" style="margin-top:12px; justify-content:flex-end;">
           <button class="btn secondary" id="backToReviewBtn" type="button">↩ Revisar respuestas</button>
           <button class="btn" id="submitBtn" type="button">📨 Enviar respuestas</button>
         </div>
+
         <div id="submitMsg" style="margin-top:12px;"></div>
         <p class="notice">Al enviar, se mandan: nombre/alias, personaje, respuestas (A–D) y puntuación calculada.</p>
       </div>
@@ -343,15 +507,19 @@
 <script>
 /**
  * CONFIG
- * 1) Crea tu formulario en Formspree.
- * 2) Copia el endpoint y pégalo aquí:
+ * Pega aquí tu endpoint de Formspree:
  */
 const FORM_ENDPOINT = "https://formspree.io/f/xbdajrjl"; // <-- REEMPLAZA
 
 /**
- * Mostrar resultado al jugador: puedes cambiar el default aquí si quieres.
+ * Mostrar resultado al jugador (por defecto):
  */
 let SHOW_RESULTS_TO_PLAYER = true;
+
+/**
+ * Tema: “🕯️ Pergamino” / “🌙 Noche”
+ */
+const THEME_KEY = "wd_theme";
 
 /**
  * Facciones y etiquetas (8)
@@ -368,7 +536,7 @@ const FACTIONS = [
 ];
 
 /**
- * MATRIZ DE SCORING (tu matriz): escena+opción -> {primary, secondary}
+ * MATRIZ DE SCORING: escena+opción -> {primary, secondary}
  * Regla: +2 primary, +1 secondary
  */
 const SCORE_KEY = {
@@ -382,20 +550,20 @@ const SCORE_KEY = {
   "8-A": {p:"LA", s:"HAR"}, "8-B": {p:"HAR", s:"BD"}, "8-C": {p:"BD", s:"LA"}, "8-D": {p:"GH", s:"HAR"},
   "9-A": {p:"LA", s:"GH"}, "9-B": {p:"ZH", s:"HAR"}, "9-C": {p:"BD", s:"ZH"}, "9-D": {p:"HAR", s:"BD"},
   "10-A":{p:"LA", s:"GH"}, "10-B":{p:"HAR", s:"GH"}, "10-C":{p:"ZH", s:"BD"}, "10-D":{p:"BD", s:"XG"},
-  "11-A":{p:"GH", s:"LA"}, "11-B":{p:"ZH", s:"BD"}, "11-C":{p:"HAR", s:"LA"}, "11-D":{p:"ZH", s:"BD"},
-  "12-A":{p:"LA", s:"GH"}, "12-B":{p:"LA", s:"HAR"}, "12-C":{p:"HAR", s:"BD"}, "12-D":{p:"ZH", s:"XG"},
-  "13-A":{p:"OOG", s:"LA"}, "13-B":{p:"HAR", s:"BD"}, "13-C":{p:"GH", s:"LA"}, "13-D":{p:"BD", s:"HAR"},
-  "14-A":{p:"LA", s:"HAR"}, "14-B":{p:"GH", s:"LA"}, "14-C":{p:"HAR", s:"BD"}, "14-D":{p:"HAR", s:"GH"},
-  "15-A":{p:"LA", s:"OOG"}, "15-B":{p:"HAR", s:"OOG"}, "15-C":{p:"BD", s:"ZH"}, "15-D":{p:"HAR", s:"LA"},
-  "16-A":{p:"LA", s:"GH"}, "16-B":{p:"HAR", s:"GH"}, "16-C":{p:"ZH", s:"BD"}, "16-D":{p:"GH", s:"ZH"},
-  "17-A":{p:"LA", s:"GH"}, "17-B":{p:"HAR", s:"BD"}, "17-C":{p:"GH", s:"LA"}, "17-D":{p:"ZH", s:"XG"},
-  "18-A":{p:"HAR", s:"LA"}, "18-B":{p:"HAR", s:"BD"}, "18-C":{p:"BD", s:"ZH"}, "18-D":{p:"XG", s:"BD"},
-  "19-A":{p:"LA", s:"OOG"}, "19-B":{p:"HAR", s:"LA"}, "19-C":{p:"OOG", s:"LA"}, "19-D":{p:"HAR", s:"BD"},
-  "20-A":{p:"LA", s:"GH"}, "20-B":{p:"HAR", s:"BD"}, "20-C":{p:"BD", s:"ZH"}, "20-D":{p:"GH", s:"LA"},
+  "11-A":{p:"GH", s:"LA"}, "11-B": {p:"ZH", s:"BD"}, "11-C":{p:"HAR", s:"LA"}, "11-D":{p:"ZH", s:"BD"},
+  "12-A":{p:"LA", s:"GH"}, "12-B": {p:"LA", s:"HAR"}, "12-C":{p:"HAR", s:"BD"}, "12-D":{p:"ZH", s:"XG"},
+  "13-A":{p:"OOG", s:"LA"}, "13-B": {p:"HAR", s:"BD"}, "13-C":{p:"GH", s:"LA"}, "13-D":{p:"BD", s:"HAR"},
+  "14-A":{p:"LA", s:"HAR"}, "14-B": {p:"GH", s:"LA"}, "14-C":{p:"HAR", s:"BD"}, "14-D":{p:"HAR", s:"GH"},
+  "15-A":{p:"LA", s:"OOG"}, "15-B": {p:"HAR", s:"OOG"}, "15-C":{p:"BD", s:"ZH"}, "15-D":{p:"HAR", s:"LA"},
+  "16-A":{p:"LA", s:"GH"}, "16-B": {p:"HAR", s:"GH"}, "16-C":{p:"ZH", s:"BD"}, "16-D":{p:"GH", s:"ZH"},
+  "17-A":{p:"LA", s:"GH"}, "17-B": {p:"HAR", s:"BD"}, "17-C":{p:"GH", s:"LA"}, "17-D":{p:"ZH", s:"XG"},
+  "18-A":{p:"HAR", s:"LA"}, "18-B": {p:"HAR", s:"BD"}, "18-C":{p:"BD", s:"ZH"}, "18-D":{p:"XG", s:"BD"},
+  "19-A":{p:"LA", s:"OOG"}, "19-B": {p:"HAR", s:"LA"}, "19-C":{p:"OOG", s:"LA"}, "19-D":{p:"HAR", s:"BD"},
+  "20-A":{p:"LA", s:"GH"}, "20-B": {p:"HAR", s:"BD"}, "20-C":{p:"BD", s:"ZH"}, "20-D":{p:"GH", s:"LA"},
 };
 
 /**
- * PREGUNTAS (20 escenas) — texto tal como lo tienes.
+ * PREGUNTAS (20 escenas)
  */
 const QUESTIONS = [
   {
@@ -625,6 +793,8 @@ const playerNameEl = document.getElementById("playerName");
 const characterNameEl = document.getElementById("characterName");
 const resetBtn = document.getElementById("resetBtn");
 const toggleResultsBtn = document.getElementById("toggleResultsBtn");
+const themeBtn = document.getElementById("themeBtn");
+
 const progressBar = document.getElementById("progressBar");
 const progressText = document.getElementById("progressText");
 
@@ -644,11 +814,12 @@ const resultCard = document.getElementById("resultCard");
 const backToReviewBtn = document.getElementById("backToReviewBtn");
 const submitBtn = document.getElementById("submitBtn");
 const submitMsg = document.getElementById("submitMsg");
+
 const scoreTableBody = document.querySelector("#scoreTable tbody");
 const radarCanvas = document.getElementById("radar");
 const radarCtx = radarCanvas.getContext("2d");
 
-const LS_KEY = "wd_affinity_quiz_v1";
+const LS_KEY = "wd_affinity_quiz_v2";
 
 let state = {
   idx: 0,
@@ -685,22 +856,6 @@ function load(){
     }
   }catch(e){}
 }
-function resetAll(){
-  if(!confirm("¿Seguro que quieres reiniciar el test en este dispositivo?")) return;
-  localStorage.removeItem(LS_KEY);
-  state = {
-    idx: 0,
-    playerName: "",
-    characterName: "",
-    showResults: true,
-    answers: Array(20).fill(""),
-  };
-  playerNameEl.value = "";
-  characterNameEl.value = "";
-  setSubmitMsg("");
-  render();
-  save();
-}
 function completedCount(){
   return state.answers.filter(x=>x==="A"||x==="B"||x==="C"||x==="D").length;
 }
@@ -708,12 +863,6 @@ function updateProgress(){
   const done = completedCount();
   progressText.textContent = `${done}/20`;
   progressBar.style.width = `${(done/20)*100}%`;
-}
-function currentKey(){
-  const scene = state.idx + 1;
-  const opt = state.answers[state.idx];
-  if(!opt) return null;
-  return `${scene}-${opt}`;
 }
 
 function computeScores(){
@@ -748,12 +897,12 @@ function drawRadar(pct){
   const values = FACTIONS.map(f=>pct[f.code] || 0);
 
   // background
-  radarCtx.fillStyle = "rgba(0,0,0,.12)";
+  radarCtx.fillStyle = "rgba(0,0,0,.06)";
   radarCtx.fillRect(0,0,W,H);
 
   // grid
   const rings = 5;
-  radarCtx.strokeStyle = "rgba(255,255,255,.10)";
+  radarCtx.strokeStyle = "rgba(31,26,18,.18)";
   radarCtx.lineWidth = 1;
 
   for(let r=1; r<=rings; r++){
@@ -771,18 +920,18 @@ function drawRadar(pct){
   }
 
   // axes + labels
-  radarCtx.fillStyle = "rgba(232,238,252,.9)";
-  radarCtx.font = "12px system-ui";
+  radarCtx.fillStyle = "rgba(31,26,18,.90)";
+  radarCtx.font = "12px 'Cinzel', serif";
   for(let i=0; i<labels.length; i++){
     const ang = (Math.PI*2) * (i/labels.length) - Math.PI/2;
-    const x = cx + (radius+18)*Math.cos(ang);
-    const y = cy + (radius+18)*Math.sin(ang);
-    radarCtx.strokeStyle = "rgba(255,255,255,.12)";
+    radarCtx.strokeStyle = "rgba(31,26,18,.18)";
     radarCtx.beginPath();
     radarCtx.moveTo(cx,cy);
     radarCtx.lineTo(cx + radius*Math.cos(ang), cy + radius*Math.sin(ang));
     radarCtx.stroke();
 
+    const x = cx + (radius+18)*Math.cos(ang);
+    const y = cy + (radius+18)*Math.sin(ang);
     const text = labels[i];
     const tw = radarCtx.measureText(text).width;
     radarCtx.fillText(text, x - tw/2, y + 4);
@@ -799,30 +948,32 @@ function drawRadar(pct){
     else radarCtx.lineTo(x,y);
   }
   radarCtx.closePath();
-  radarCtx.fillStyle = "rgba(122,162,255,.18)";
-  radarCtx.strokeStyle = "rgba(110,243,197,.55)";
+  radarCtx.fillStyle = "rgba(123,31,31,.18)";
+  radarCtx.strokeStyle = "rgba(47,107,79,.55)";
   radarCtx.lineWidth = 2;
   radarCtx.fill();
   radarCtx.stroke();
 
   // title
-  radarCtx.fillStyle = "rgba(232,238,252,.9)";
-  radarCtx.font = "700 14px system-ui";
+  radarCtx.fillStyle = "rgba(31,26,18,.90)";
+  radarCtx.font = "700 14px 'Cinzel', serif";
   radarCtx.fillText("Afinidad por facción", 18, 26);
 }
 
 function renderScoreTable(pct){
   scoreTableBody.innerHTML = "";
-  // Sort descending
   const sorted = [...FACTIONS].map(f=>({ ...f, v: pct[f.code]||0 }))
     .sort((a,b)=>b.v-a.v);
 
   sorted.forEach(f=>{
     const tr = document.createElement("tr");
+
     const td1 = document.createElement("td");
     td1.textContent = f.name;
+
     const td2 = document.createElement("td");
     td2.textContent = `${Math.round(f.v*100)}%`;
+
     const td3 = document.createElement("td");
     const bar = document.createElement("div");
     bar.className = "bar";
@@ -830,6 +981,7 @@ function renderScoreTable(pct){
     inner.style.width = `${Math.round(f.v*100)}%`;
     bar.appendChild(inner);
     td3.appendChild(bar);
+
     tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3);
     scoreTableBody.appendChild(tr);
   });
@@ -849,13 +1001,21 @@ function showQuestion(){
 }
 
 function canSubmit(){
-  return completedCount() === 20 && playerNameEl.value.trim().length > 0 && characterNameEl.value.trim().length > 0;
+  return completedCount() === 20 &&
+    playerNameEl.value.trim().length > 0 &&
+    characterNameEl.value.trim().length > 0;
 }
 
 function render(){
   updateProgress();
 
   toggleResultsBtn.textContent = `👁️ Mostrar resultado al final: ${state.showResults ? "Sí" : "No"}`;
+
+  // update theme button label
+  if(themeBtn){
+    const current = document.documentElement.dataset.theme || "night";
+    themeBtn.textContent = current === "parchment" ? "🕯️ Pergamino" : "🌙 Noche";
+  }
 
   const q = QUESTIONS[state.idx];
   qTitle.textContent = q.title;
@@ -874,12 +1034,15 @@ function render(){
       save();
       render();
     };
+
     const badge = document.createElement("div");
     badge.className = "letter";
     badge.textContent = letter;
+
     const text = document.createElement("div");
     text.className = "text";
     text.textContent = q.options[letter];
+
     div.appendChild(badge);
     div.appendChild(text);
     optionsEl.appendChild(div);
@@ -888,13 +1051,30 @@ function render(){
   prevBtn.disabled = state.idx===0;
   nextBtn.textContent = state.idx===19 ? "Finalizar →" : "Siguiente →";
   submitBtn.disabled = !canSubmit();
-
-  // Decide whether to show result screen when finished
-  if(state.idx===19 && state.answers[19] && completedCount()===20){
-    // Still stay in question view; user presses "Finalizar" to go to end.
-  }
 }
 
+// ---------- Tema ----------
+function setTheme(theme){
+  document.documentElement.dataset.theme = theme;
+  localStorage.setItem(THEME_KEY, theme);
+  if(themeBtn){
+    themeBtn.textContent = theme === "parchment" ? "🕯️ Pergamino" : "🌙 Noche";
+  }
+}
+function initTheme(){
+  const saved = localStorage.getItem(THEME_KEY);
+  const theme = saved || "night";
+  setTheme(theme);
+}
+if(themeBtn){
+  themeBtn.addEventListener("click", () => {
+    const current = document.documentElement.dataset.theme || "night";
+    const next = current === "night" ? "parchment" : "night";
+    setTheme(next);
+  });
+}
+
+// ---------- Envío ----------
 async function submit(){
   setSubmitMsg("", "");
   if(!canSubmit()){
@@ -917,9 +1097,9 @@ async function submit(){
     scores_points: pts,
     scores_percent: pct,
     total_points: total,
-    // útil para filtrar en tu panel:
     top3: [...FACTIONS].map(f=>({code:f.code, name:f.name, pct:pct[f.code]||0}))
       .sort((a,b)=>b.pct-a.pct).slice(0,3),
+    theme: document.documentElement.dataset.theme || "night",
     userAgent: navigator.userAgent
   };
 
@@ -932,8 +1112,6 @@ async function submit(){
 
     if(res.ok){
       setSubmitMsg("✅ Enviado. Gracias. Ya puedes cerrar esta página.", "ok");
-      // opcional: bloquear cambios tras enviar
-      // localStorage.removeItem(LS_KEY);
     }else{
       const t = await res.text();
       setSubmitMsg("❌ Error al enviar. Revisa tu Formspree y el endpoint. Detalle: " + t.slice(0,180), "error");
@@ -945,7 +1123,7 @@ async function submit(){
   }
 }
 
-// ---------- events ----------
+// ---------- Events ----------
 playerNameEl.addEventListener("input", save);
 characterNameEl.addEventListener("input", save);
 
@@ -955,7 +1133,22 @@ toggleResultsBtn.addEventListener("click", () => {
   render();
 });
 
-resetBtn.addEventListener("click", resetAll);
+resetBtn.addEventListener("click", () => {
+  if(!confirm("¿Seguro que quieres reiniciar el test en este dispositivo?")) return;
+  localStorage.removeItem(LS_KEY);
+  state = {
+    idx: 0,
+    playerName: "",
+    characterName: "",
+    showResults: true,
+    answers: Array(20).fill(""),
+  };
+  playerNameEl.value = "";
+  characterNameEl.value = "";
+  setSubmitMsg("");
+  render();
+  save();
+});
 
 prevBtn.addEventListener("click", () => {
   if(state.idx>0){ state.idx--; save(); render(); }
@@ -976,15 +1169,7 @@ nextBtn.addEventListener("click", () => {
     }
     return;
   }
-  // show results or go straight to submit
-  if(state.showResults){
-    showResults();
-  }else{
-    // si no quieres mostrar resultado, enviamos directamente desde aquí:
-    showResults(); // render hidden data; keeps flow simple
-    // oculta si se desea:
-    resultCard.style.display = ""; questionCard.style.display="none";
-  }
+  showResults();
 });
 
 backToReviewBtn.addEventListener("click", () => {
@@ -995,7 +1180,7 @@ submitBtn.addEventListener("click", submit);
 
 // ---------- init ----------
 load();
-SHOW_RESULTS_TO_PLAYER = state.showResults;
+initTheme();
 render();
 </script>
 </body>
