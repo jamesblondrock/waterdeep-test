@@ -492,6 +492,8 @@
           <tbody></tbody>
         </table>
 
+        <div id="hiddenResultsMsg" class="notice" style="display:none;">🕯️ Resultados ocultos. Puedes enviar respuestas.</div>
+
         <div class="row" style="margin-top:12px; justify-content:flex-end;">
           <button class="btn secondary" id="backToReviewBtn" type="button">↩ Revisar respuestas</button>
           <button class="btn" id="submitBtn" type="button">📨 Enviar respuestas</button>
@@ -1020,8 +1022,9 @@ function requestPassword(){
 }
 
 function showResultsProtected(){
-  if(!isDM && !requestPassword()) return;
-  showResults();
+  const reveal = isDM || (SHOW_RESULTS_TO_PLAYER && state.showResults);
+  if(!isDM && reveal && !requestPassword()) return;
+  showResults(reveal);
 }
 
 /* =========================
@@ -1122,13 +1125,39 @@ ${narrative}`;
 }
 
 
-function showResults(){
+function showResults(reveal=true){
   const { pct } = computeScores();
-  drawRadar(pct);
-  renderScoreTable(pct);
-  renderDMOnly(pct);
+  const radarEl = document.getElementById("radar");
+  const tableEl = document.getElementById("scoreTable");
+  const hiddenMsgEl = document.getElementById("hiddenResultsMsg");
+
   questionCard.style.display = "none";
   resultCard.style.display = "";
+
+  // SOLO DM: siempre puede ver narrativa (y resultados si quiere)
+  if(isDM){
+    if(radarEl) radarEl.style.display = "";
+    if(tableEl) tableEl.style.display = "";
+    if(hiddenMsgEl) hiddenMsgEl.style.display = "none";
+    drawRadar(pct);
+    renderScoreTable(pct);
+    renderDMOnly(pct);
+    return;
+  }
+
+  if(reveal){
+    if(radarEl) radarEl.style.display = "";
+    if(tableEl) tableEl.style.display = "";
+    if(hiddenMsgEl) hiddenMsgEl.style.display = "none";
+    drawRadar(pct);
+    renderScoreTable(pct);
+  }else{
+    // Jugador: resultados ocultos
+    if(radarEl) radarEl.style.display = "none";
+    if(tableEl) tableEl.style.display = "none";
+    if(hiddenMsgEl) hiddenMsgEl.style.display = "";
+  }
+  renderDMOnly(pct);
 }
 
 function showQuestion(){
