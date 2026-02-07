@@ -409,9 +409,26 @@
     }
   
     /* Mantener estable el ancho de la barra de progreso al cambiar tema */
-    #themeBtn{ min-width: 150px; white-space:nowrap; }
-    #toggleResultsBtn{ min-width: 320px; white-space:nowrap; }
-    #resetBtn{ min-width: 150px; white-space:nowrap; }
+    
+    
+    
+
+  
+    /* Controles: mantener barra estable y botones al tamaño del texto */
+    .controls-top{ align-items:center; gap:10px; }
+    .controls-top .progress{ flex: 1 1 auto; min-width: 260px; }
+    .controls-top .pill{ flex: 0 0 auto; }
+    .controls-bottom{ margin-top:10px; gap:10px; flex-wrap:wrap; justify-content:flex-start; }
+    .controls-bottom .btn{ flex: 0 0 auto; width:auto; white-space:nowrap; }
+
+    /* Mensaje de resultados ocultos más visible */
+    .notice.big{
+      font-size: 1.08rem;
+      padding: 12px 14px;
+      border-radius: 14px;
+      display:block;
+      margin-top: 10px;
+    }
 
   </style>
 </head>
@@ -441,10 +458,12 @@
         <div class="pill" id="autosavePill">💾 Autoguardado: activo</div>
       </div>
 
-      <div class="row" style="margin-top:12px;">
+      <div class="row controls-top" style="margin-top:12px;">
         <div class="progress" aria-label="Progreso"><div id="progressBar"></div></div>
         <div class="pill"><span id="progressText">0/20</span></div>
+      </div>
 
+      <div class="row controls-bottom">
         <button class="btn secondary" id="themeBtn" type="button">🌙 Noche</button>
         <button class="btn secondary" id="toggleResultsBtn" type="button">👁️ Mostrar resultado al final: Sí</button>
         <button class="btn danger" id="resetBtn" type="button">♻️ Reiniciar</button>
@@ -488,6 +507,7 @@
       <div>
         <canvas id="radar" width="520" height="420"></canvas>
         <p class="notice" id="resultBlurb">Esto es una afinidad aproximada basada en tus elecciones; no te “encasilla”.</p>
+        <div id="hiddenResultsMsg" class="notice big" style="display:none;">🕯️ Resultados ocultos. Puedes enviar respuestas.</div>
       </div>
 
       <div>
@@ -498,7 +518,7 @@
           <tbody></tbody>
         </table>
 
-        <div id="hiddenResultsMsg" class="notice" style="display:none;">🕯️ Resultados ocultos. Puedes enviar respuestas.</div>
+        
 
         <div class="row" style="margin-top:12px; justify-content:flex-end;">
           <button class="btn secondary" id="backToReviewBtn" type="button">↩ Revisar respuestas</button>
@@ -1164,8 +1184,8 @@ function showResults(reveal=true){
     // Jugador: resultados ocultos
     if(radarEl) radarEl.style.display = "none";
     if(tableEl) tableEl.style.display = "none";
-    if(hiddenMsgEl) hiddenMsgEl.style.display = "";
-    if(blurbEl) blurbEl.textContent = "🕯️ Tu perfil ha sido registrado en Waterdeep.";
+    if(hiddenMsgEl){ hiddenMsgEl.style.display = ""; hiddenMsgEl.textContent = "🕯️ Resultados ocultos. Puedes enviar respuestas."; }
+    if(blurbEl) blurbEl.textContent = "";
     
   }
   renderDMOnly(pct);
@@ -1360,12 +1380,15 @@ nextBtn.addEventListener("click", () => {
     render();
     return;
   }
-  // final
+  // final: NO permitir resultados hasta completar las 20
   if(completedCount() < 20){
-    setMsg("Te faltan escenas por responder. Puedes volver y completar antes de enviar.", "error");
-    if(state.showResults){
-      showResultsProtected();
-    }
+    setMsg("Te faltan escenas por responder. Completa todas las escenas antes de finalizar.", "error");
+    // Salta automáticamente a la primera escena sin responder
+    const firstMissing = state.answers.findIndex(a => !a);
+    state.idx = firstMissing >= 0 ? firstMissing : 0;
+    save();
+    showQuestion();
+    render();
     return;
   }
   showResultsProtected();
