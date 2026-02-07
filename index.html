@@ -407,6 +407,12 @@
       border: 1px solid rgba(31,26,18,.18) !important;
       border-radius:16px;
     }
+  
+    /* Mantener estable el ancho de la barra de progreso al cambiar tema */
+    #themeBtn{ min-width: 150px; white-space:nowrap; }
+    #toggleResultsBtn{ min-width: 320px; white-space:nowrap; }
+    #resetBtn{ min-width: 150px; white-space:nowrap; }
+
   </style>
 </head>
 
@@ -481,7 +487,7 @@
     <div class="card-inner grid2">
       <div>
         <canvas id="radar" width="520" height="420"></canvas>
-        <p class="notice">Esto es una afinidad aproximada basada en tus elecciones; no te “encasilla”.</p>
+        <p class="notice" id="resultBlurb">Esto es una afinidad aproximada basada en tus elecciones; no te “encasilla”.</p>
       </div>
 
       <div>
@@ -1130,6 +1136,7 @@ function showResults(reveal=true){
   const radarEl = document.getElementById("radar");
   const tableEl = document.getElementById("scoreTable");
   const hiddenMsgEl = document.getElementById("hiddenResultsMsg");
+  const blurbEl = document.getElementById("resultBlurb");
 
   questionCard.style.display = "none";
   resultCard.style.display = "";
@@ -1139,6 +1146,7 @@ function showResults(reveal=true){
     if(radarEl) radarEl.style.display = "";
     if(tableEl) tableEl.style.display = "";
     if(hiddenMsgEl) hiddenMsgEl.style.display = "none";
+    if(blurbEl) blurbEl.textContent = "Esto es una afinidad aproximada basada en tus elecciones; no te “encasilla”.";
     drawRadar(pct);
     renderScoreTable(pct);
     renderDMOnly(pct);
@@ -1149,6 +1157,7 @@ function showResults(reveal=true){
     if(radarEl) radarEl.style.display = "";
     if(tableEl) tableEl.style.display = "";
     if(hiddenMsgEl) hiddenMsgEl.style.display = "none";
+    if(blurbEl) blurbEl.textContent = "Esto es una afinidad aproximada basada en tus elecciones; no te “encasilla”.";
     drawRadar(pct);
     renderScoreTable(pct);
   }else{
@@ -1156,6 +1165,8 @@ function showResults(reveal=true){
     if(radarEl) radarEl.style.display = "none";
     if(tableEl) tableEl.style.display = "none";
     if(hiddenMsgEl) hiddenMsgEl.style.display = "";
+    if(blurbEl) blurbEl.textContent = "🕯️ Tu perfil ha sido registrado en Waterdeep.";
+    
   }
   renderDMOnly(pct);
 }
@@ -1301,15 +1312,26 @@ async function submit(){
 }
 
 // ---------- Events ----------
-playerNameEl.addEventListener("input", save);
-characterNameEl.addEventListener("input", save);
+playerNameEl.addEventListener("input", () => { save(); render(); });
+characterNameEl.addEventListener("input", () => { save(); render(); });
 
 toggleResultsBtn.addEventListener("click", () => {
   state.showResults = !state.showResults;
   save();
   render();
-});
 
+  // Si ya estás en la pantalla de resultados, aplica el cambio al momento:
+  const onResults = (resultCard.style.display !== "none");
+  if(onResults){
+    if(state.showResults){
+      // pedir contraseña (salvo DM) y revelar
+      showResultsProtected();
+    } else {
+      // ocultar resultados pero mantener pantalla de cierre
+      showResults(false);
+    }
+  }
+});
 resetBtn.addEventListener("click", () => {
   if(!confirm("¿Seguro que quieres reiniciar el test en este dispositivo?")) return;
   localStorage.removeItem(LS_KEY);
